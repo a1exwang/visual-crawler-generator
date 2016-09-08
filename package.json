@@ -1,0 +1,11 @@
+{
+  "name": "visual-spider",
+  "version": "0.1.0",
+  "dependencies": {
+    "coffee-script": "^1.10.0",
+    "electron-prebuilt": ">= 1.0.0",
+    "jquery": "^3.1.0",
+    "jsdom": "^9.5.0"
+  },
+  "main": "src/entry.js"
+}

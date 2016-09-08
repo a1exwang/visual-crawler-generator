@@ -1,0 +1,97 @@
+$ = require 'jquery'
+ParserSelector = require './js/parser/parser'
+
+listSelector = null
+
+injectedJs = ($) ->
+  $.each $('*'), (i, docElement) ->
+    jqElement = $(docElement)
+
+    parseFirstElement = (event) ->
+      selectorGen = new ParserSelector(docElement.ownerDocument)
+      listSelector = selectorGen.createListSelectors(docElement)
+
+    parseNextElement = (event) ->
+      elements = listSelector(docElement)
+      for selectedTarget in elements
+        $(selectedTarget).stop().css("background-color", "#FFFF9C").animate({ backgroundColor: "#FFFFFF"}, 1500);
+
+    parseOneElement = (event, level) ->
+      selectorGen = new ParserSelector(docElement.ownerDocument)
+      selectors = selectorGen.getItemSelectors(docElement)
+      console.log("--- Level #{level} ---")
+      $.each(selectors, (i, selector) ->
+        console.log "Selector##{i}: #{selector.toReadableString()}"
+
+        selectorResult = selector(document)
+        if selectorResult
+          if selectorResult.length == 0
+            console.log("bad selector, cannot select self")
+          else if selectorResult.length == 1
+            # we can determine that only one valid element is selected
+            if selectorResult[0] == docElement
+              console.log("good selector")
+              console.log(docElement)
+            else
+              console.log("bad selector, cannot select itself")
+          else
+            console.log("multiple(#{selectorResult.length}) elements selected, selector not accurate enough:")
+            $.each(selectorResult, (i, selectedElement) ->
+              txt = $(selectedElement).text().trim()
+              if txt.length > 30
+                txt = txt.substr(0, 30) + "..."
+              console.log(selectedElement.tagName + " \"#{txt}\"")
+            )
+        console.log('------')
+      )
+
+      # call previous click event
+      prevOnclick = jqElement.data('__prev_onclick')
+      prevOnclick(event) if prevOnclick
+
+      # call parent on click event
+      parentMyOnClick = jqElement.parent().data('__my_onclick')
+      if parentMyOnClick
+        parentMyOnClick(event, level + 1)
+
+    jqElement.data('__prev_onclick', jqElement.attr('onclick'))
+    jqElement.data('__my_onclick', parseOneElement)
+    jqElement.on('mousedown', (e) ->
+      if e.which == 3
+        if e.ctrlKey
+          if listSelector
+            parseNextElement(e)
+          else
+            parseFirstElement(e)
+        else if e.shiftKey
+          listSelector = null
+        else
+          parseOneElement(e, 0)
+        e.stopPropagation()
+    )
+
+loadJQueryAndInjectJs = (window, document) ->
+  script = document.createElement("SCRIPT");
+  script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js';
+  script.type = 'text/javascript';
+  document.getElementsByTagName("head")[0].appendChild(script)
+  checkReady = (callback) ->
+    if window.jQuery
+      callback(window.jQuery);
+    else
+      window.setTimeout((-> checkReady(callback)), 100)
+
+  # wait for jquery to be completely loaded
+  checkReady(injectedJs)
+
+$(document).ready ->
+  frame = $("#frame")
+  frame.on 'load', ->
+    console.log("iframe loaded: #{frame.attr('src')}")
+    innerWindow = frame.get(0).contentWindow
+    loadJQueryAndInjectJs(innerWindow, innerWindow.document)
+  $("#inputUrlForm").on('submit', (e) ->
+    frame.attr('src', $("#inputUrl").val())
+    e.preventDefault()
+  )
+
