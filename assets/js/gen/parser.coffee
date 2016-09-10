@@ -1,5 +1,7 @@
 $ = require('jquery')
 tagSelectorGen = require './tagSelectorGen'
+positionSelectorGen = require './positionSelectorGen'
+listSelectorGen = require './listSelectorGen'
 
 createCSSSelector = (cssText, score) ->
   selector = (document) ->
@@ -24,7 +26,7 @@ getDomAncestors = (domElement) ->
     return []
 
 indexOfChild = (node, e) ->
-  for ele, i in node.childNodes
+  for ele, i in node.children
     if ele == e
       return i
   return -1
@@ -32,7 +34,7 @@ indexOfChild = (node, e) ->
 getNodeByIndexes = (node, indexes) ->
   try
     for index in indexes[1...indexes.length]
-      node = node.childNodes[index]
+      node = node.children[index]
     return node
   catch e
     console.log(e)
@@ -76,26 +78,27 @@ ParserSelector = (document) ->
     if i == -1
       throw "cannot found common ancestor"
     else
-      common_ancestor = ancestors1[i]
+      commonAncestor = ancestors1[i]
 
     # we have common_ancestor
-    css = tagSelectorGen(common_ancestor)
-    console.log css
-    console.log document.querySelectorAll(css)
+    cssCommonAncestorSelector = tagSelectorGen(commonAncestor)
+    cssListItemSelector = listSelectorGen(firstDomElement, commonAncestor)
+
+    console.log "ListNode selector: \"" + cssCommonAncestorSelector + '"'
+    console.log document.querySelectorAll(cssCommonAncestorSelector)
+    console.log "Elements selector: \"" + cssListItemSelector + '"'
+    console.log commonAncestor.querySelectorAll(cssListItemSelector)
 
     # get indexes
-    generation_i = i + 1
-    node = common_ancestor
+    iGeneration = i + 1
+    node = commonAncestor
     indexes = []
-    while generation_i < ancestors1.length
-      indexes.push indexOfChild(node, ancestors1[generation_i])
-      node = ancestors1[generation_i]
-      generation_i++
+    while iGeneration < ancestors1.length
+      indexes.push indexOfChild(node, ancestors1[iGeneration])
+      node = ancestors1[iGeneration]
+      iGeneration++
 
-    # here we have the indexes
-    console.log(indexes)
-
-    selectedTargets = $.map(common_ancestor.children, (e) -> getNodeByIndexes(e, indexes))
+    selectedTargets = $.map(commonAncestor.children, (e) -> getNodeByIndexes(e, indexes))
 
     return selectedTargets
 
@@ -113,6 +116,4 @@ ParserSelector = (document) ->
     return listSelector
 
   return this
-
-
 module.exports = ParserSelector

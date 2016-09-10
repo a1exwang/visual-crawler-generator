@@ -10,9 +10,9 @@ traverseAncestors = (node, cb) ->
 module.exports = (node) ->
   tagNames = []
   traverseAncestors(node, (ancestor, depth) ->
-    tagNames.push(ancestor.tagName)
+    tagNames.push(ancestor.tagName.toLowerCase())
   )
 
-  tagNames.join(">")
+  tagNames.join(" > ")
 
 
