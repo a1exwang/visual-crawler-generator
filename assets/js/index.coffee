@@ -12,13 +12,6 @@ loadJQueryAndInjectJs = (win, doc) ->
   script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
   script.type = 'text/javascript';
   doc.getElementsByTagName("head")[0].appendChild(script)
-#  checkReady = (callback) ->
-#    if win.jQuery
-#      console.log(win.jQuery.noConflict()(doc).on)
-#      callback(win, win.jQuery)
-#    else
-#      win.setTimeout((-> checkReady(callback)), 100)
-#  checkReady(onInjected)
 
 $(document).ready ->
 
