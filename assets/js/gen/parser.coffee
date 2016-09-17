@@ -16,6 +16,21 @@ createCSSSelector = (cssText, score) ->
     return selector.score
   return selector
 
+createCSSSelectorByTagName = (node, score) ->
+  cssText = tagSelectorGen(node)
+
+  selector = (document) ->
+    document.querySelectorAll(selector.cssText)
+  selector.cssText = cssText
+  selector.score = score
+  selector.toReadableString = ->
+    return "CSS <#{score}> \"#{selector.cssText}\""
+  selector.toCSS = ->
+    return selector.cssText
+  selector.getScore = ->
+    return selector.score
+  return selector
+
 getDomAncestors = (domElement) ->
   parent = domElement.parentElement
   if parent
@@ -46,17 +61,27 @@ ParserSelector = (document) ->
   this.getItemSelectors = (domElement) ->
     selectors = []
     cssText = null
+
+    # if it has an id attr, we don't need other selectors
     if $(domElement).attr('id')
       cssText = domElement.tagName.toLowerCase() + "##{$(domElement).attr('id')}"
       score = 100
-    else if $(domElement).attr('name')
-      name = $(domElement).attr('name')
-      cssText = "[name=\"#{name}\"]"
-      score = 50
-    else if $(domElement).attr('class')
-      classNames = $(domElement).attr('class').trim().split(/\s+/)
-      cssText = domElement.tagName.toLowerCase() + $.map(classNames, (ele) -> "." + ele).join('')
-      score = 10
+    else
+      if $(domElement).attr('name')
+        name = $(domElement).attr('name')
+        cssText = "[name=\"#{name}\"]"
+        score = 50
+        selectors.push(createCSSSelector(cssText, score))
+
+      if $(domElement).attr('class')
+        classNames = $(domElement).attr('class').trim().split(/\s+/)
+        cssText = domElement.tagName.toLowerCase() + $.map(classNames, (ele) -> "." + ele).join('')
+        score = 30
+        selectors.push(createCSSSelector(cssText, score))
+
+      # if we cannot select anything, use tagName selector
+      if selectors.length == 0
+        selectors.push(createCSSSelectorByTagName(domElement, 20))
 
     if cssText
       selectors.push(createCSSSelector(cssText, score))

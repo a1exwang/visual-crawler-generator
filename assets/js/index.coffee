@@ -14,10 +14,17 @@ loadJQueryAndInjectJs = (win, doc) ->
   doc.getElementsByTagName("head")[0].appendChild(script)
 
 $(document).ready ->
-  dialog = require('./js/ui/dialogTable')($("#dialogCreateSelectors").get(0))
+  selectorCreator = require('./js/ui/dialogTable')(
+    $("#componentCreateListSelector").get(0), # list selector table
+    $("#componentCreateItemSelector").get(0)  # item selector table
+  )
+
   window.api = {
-    addSingleAttribute: (selectorText) ->
-      dialog.addEditableColumn('', selectorText)
+    addSingleAttributeToListSelector: (selectorText) ->
+      selectorCreator.listSelectorAddEditableColumn('', selectorText)
+    addSingleAttributeToElementSelector: (selectorText) ->
+      selectedText = window.innerDocument.querySelectorAll(selectorText)[0].outerHTML
+      selectorCreator.itemSelectorAddEditableColumn('', selectorText, selectedText)
   }
 
   $("#inputUrlForm").on 'submit', (e) ->

@@ -3,6 +3,10 @@ ParserSelector = require './gen/parser'
 listSelector = null
 
 injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
+  outerWindow.w = outerWindow.innerWindow = window
+  outerWindow.d = outerWindow.innerDocument = window.document
+  document = window.document
+
   $.each $('*', ), (i, docElement) ->
     jqElement = $(docElement)
 
@@ -15,16 +19,17 @@ injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
       for selectedTarget in elements
         $(selectedTarget).stop().css("background-color", "#FFFF9C").animate({ backgroundColor: "#FFFFFF"}, 1500);
 
-      outerWindow.api.addSingleAttribute(selector)
+      outerWindow.api.addSingleAttributeToListSelector(selector)
 
     parseOneElement = (event, level) ->
+      return unless level == 0
       selectorGen = new ParserSelector(docElement.ownerDocument)
       selectors = selectorGen.getItemSelectors(docElement)
-      console.log("--- Level #{level} ---")
+#      console.log("--- Level #{level} ---")
       $.each(selectors, (i, selector) ->
         console.log "Selector##{i}: #{selector.toReadableString()}"
 
-        selectorResult = selector(document)
+        selectorResult = document.querySelectorAll(selector.toCSS()) # selector(document)
         if selectorResult
           if selectorResult.length == 0
             console.log("bad selector, cannot select self")
@@ -43,7 +48,11 @@ injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
                 txt = txt.substr(0, 30) + "..."
               console.log(selectedElement.tagName + " \"#{txt}\"")
             )
-        console.log('------')
+        else
+          console.log("selected nothing")
+
+        outerWindow.api.addSingleAttributeToElementSelector(selector.toCSS())
+#        console.log('------')
       )
 
       # call previous click event
