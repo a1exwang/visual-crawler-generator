@@ -2,7 +2,7 @@ ParserSelector = require './gen/parser'
 
 listSelector = null
 
-injectedJsWithJQuery = (window, $) ->
+injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
   $.each $('*', ), (i, docElement) ->
     jqElement = $(docElement)
 
@@ -11,9 +11,11 @@ injectedJsWithJQuery = (window, $) ->
       listSelector = selectorGen.createListSelectors(docElement)
 
     parseNextElement = (event) ->
-      elements = listSelector(docElement)
+      {elements, selector} = listSelector(docElement)
       for selectedTarget in elements
         $(selectedTarget).stop().css("background-color", "#FFFF9C").animate({ backgroundColor: "#FFFFFF"}, 1500);
+
+      outerWindow.api.addSingleAttribute(selector)
 
     parseOneElement = (event, level) ->
       selectorGen = new ParserSelector(docElement.ownerDocument)
@@ -27,7 +29,7 @@ injectedJsWithJQuery = (window, $) ->
           if selectorResult.length == 0
             console.log("bad selector, cannot select self")
           else if selectorResult.length == 1
-# we can determine that only one valid element is selected
+            # we can determine that only one valid element is selected
             if selectorResult[0] == docElement
               console.log("good selector")
               console.log(docElement)

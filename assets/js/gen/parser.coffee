@@ -100,14 +100,17 @@ ParserSelector = (document) ->
 
     selectedTargets = $.map(commonAncestor.children, (e) -> getNodeByIndexes(e, indexes))
 
-    return selectedTargets
+    return {
+      elements: selectedTargets,
+      selector: cssCommonAncestorSelector + " > " + cssListItemSelector
+    }
 
   this.createListSelectors = (firstDomElement) ->
     listSelector = (nextDomElement) ->
       listSelector.domElements.push(nextDomElement)
       if listSelector.domElements.length == 2
-        elements = thisOfParserSelector.selectListElementsWithTwoDomElements(firstDomElement, nextDomElement)
-        return elements
+        {elements, selector} = thisOfParserSelector.selectListElementsWithTwoDomElements(firstDomElement, nextDomElement)
+        return {elements: elements, selector: selector}
       else
         # verify parent node
         console.log("should verify parent")
