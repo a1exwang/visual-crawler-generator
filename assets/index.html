@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="js/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
-        #componentCreateListSelector {
+        #ctrlCreateListSelector {
             /*position: fixed;*/
             height: auto;
             width: 800px;
@@ -18,43 +18,68 @@
             /*opacity: 1 !important;*/
         }
     </style>
+
+    <script>$ = jQuery = require('jquery')</script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
+
+    <script src="js/index.js"></script>
 </head>
-<body>
-<form id="inputUrlForm" action="#">
-    <label for="inputUrl">URL: </label>
-    <input id="inputUrl" />
-</form>
+<body data-ng-app="SelGenApp">
 
-<div id="componentCreateListSelector">
-    <h3>List Selector Creator</h3>
-    <table>
-        <tr>
-            <th>Attribute Name</th>
-            <th>Selector</th>
-        </tr>
-    </table>
+<div  class="container">
+
+    <!-- List selector generator table -->
+    <div id="ctrlCreateListSelector" data-ng-controller="ListSelController">
+        <h3>List Selector Creator</h3>
+        <table>
+            <tr>
+                <th>Attribute Name</th>
+                <th>Selector</th>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Item attribute selector generator table -->
+    <div id="ctrlCreateItemSelector" data-ng-controller="ItemSelController">
+        <h3>Item Selector Creator</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>Attribute Name</th>
+                <th>Selector</th>
+                <th>Selected Element</th>
+                <th>Type</th>
+                <th>Operation</th>
+            </tr>
+
+            <tr data-ng-repeat="selAttr in selAttributes">
+                <td><input type="text" value="{{ selAttr.name }}" /></td>
+                <td><textarea>{{ selAttr.cssText }}</textarea></td>
+                <td><textarea>{{ selAttr.selectedHTML }}</textarea></td>
+                <td><select class="form-control">
+                    <option name="text">Text</option>
+                    <option name="link">Link</option>
+                </select></td>
+                <td><button class="btn btn-warn">Delete</button></td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<div id="componentCreateItemSelector">
-    <h3>Item Selector Creator</h3>
-    <table>
-        <tr>
-            <th>Attribute Name</th>
-            <th>Selector</th>
-            <th>Selected Element</th>
-            <th>Type</th>
-            <th>Operation</th>
-        </tr>
-    </table>
+<!-- Inner window -->
+<div data-ng-controller="FrameController">
+    <form id="inputUrlForm" action="#" class="form" >
+        <input id="inputUrl" class="form-control" value="{{ url }}"/>
+    </form>
+
+    <div>
+        <iframe data-ng-src="{{ woUrl }}"
+                width="900"
+                height="700"
+                id="frame"
+                on-frame-load="onFrameLoad()">
+        </iframe>
+    </div>
 </div>
-
-<!-- http://search.jd.com/Search?keyword=ddr4&enc=utf-8&wq=ddr4&pvid=2yc7vvsi.6924lg -->
-<!-- http://www.dmm.com/en/digital/anime/-/list/=/sort=date/ -->
-<iframe src="http://www.dmm.com/en/digital/anime/-/detail/=/cid=5365hatsukoim00011/?i3_ref=list&i3_ord=1"
-        width="900"
-        height="700"
-        id="frame">
-</iframe>
-
 </body>
 </html>

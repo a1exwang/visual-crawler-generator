@@ -1,24 +1,58 @@
 $ = require 'jquery'
-onInjected = require './js/injected'
 
-loadJQueryAndInjectJs = (win, doc) ->
-  script = doc.createElement("SCRIPT")
-  previousJQuery = win.jQuery || win.$
+##
+# AngularJS App initialization
+loadAngularCtrl = (filePath, app) ->
+  require(filePath)(app)
 
-  script.onload = ->
-    newJQuery = win.jQuery.noConflict()
-    win.jQuery = win.$ = previousJQuery
-    onInjected(win, newJQuery, window, document)
-  script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
-  script.type = 'text/javascript';
-  doc.getElementsByTagName("head")[0].appendChild(script)
+SelGenApp = angular.module('SelGenApp', [])
+SelGenApp.config ($logProvider) ->
+  $logProvider.debugEnabled(true)
+SelGenApp.config ($sceDelegateProvider) ->
+    $sceDelegateProvider.resourceUrlWhitelist(['**'])
 
+# This is a dummy angular onload event directive for iframe
+SelGenApp.directive 'onFrameLoad', ->
+  return {
+    restrict: 'A',
+    scope: false, # disable scope isolating so we can modify the scope.
+    link: (scope, element, attrs) ->
+      element.on 'load', ->
+        # NOTE: DO NOT use $apply here
+        scope.$apply ->
+          scope.url = $("#frame").get(0).contentWindow.location.toString()
+        scope.onFrameLoad()
+  }
+
+loadAngularCtrl('./js/app/SelGen/AddressBarController', SelGenApp)
+loadAngularCtrl('./js/app/SelGen/ListSelController', SelGenApp)
+loadAngularCtrl('./js/app/SelGen/ItemSelController', SelGenApp)
+loadAngularCtrl('./js/app/SelGen/FrameController', SelGenApp)
+
+##
+# Initialize with jQuery here.
 $(document).ready ->
+  frame = $("#frame")
+
   selectorCreator = require('./js/ui/dialogTable')(
-    $("#componentCreateListSelector").get(0), # list selector table
-    $("#componentCreateItemSelector").get(0)  # item selector table
+    document.querySelector("#componentCreateListSelector"), # list selector table
+    document.querySelector("#componentCreateItemSelector")  # item selector table
   )
 
+  $("#inputUrlForm").on 'submit', (e) ->
+    frame.setAttribute('src', $("#inputUrl").val())
+    e.preventDefault()
+
+  ##
+  # Add other UI initialization here, especially with jQuery
+  # ...
+
+  ##
+  # Expose the API of outer window,
+  # so that inner window can use it to communicate with outer window.
+  #
+  # TODO, I know this way of using a global variable seems stupid,
+  #   but it's the easiest way to do inter-window communication
   window.api = {
     addSingleAttributeToListSelector: (selectorText) ->
       selectorCreator.listSelectorAddEditableColumn('', selectorText)
@@ -26,17 +60,5 @@ $(document).ready ->
       selectedText = window.innerDocument.querySelectorAll(selectorText)[0].outerHTML
       selectorCreator.itemSelectorAddEditableColumn('', selectorText, selectedText)
   }
-
-  $("#inputUrlForm").on 'submit', (e) ->
-    frame.setAttribute('src', $("#inputUrl").val())
-    e.preventDefault()
-
-  frame = $("#frame")
-  frame.on 'load', ->
-    console.log("iframe loaded: #{frame.attr('src')}")
-    innerWindow = frame.get(0).contentWindow
-    console.log(innerWindow.document)
-    loadJQueryAndInjectJs(innerWindow, innerWindow.document)
-
 
 
