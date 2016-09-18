@@ -1,0 +1,37 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/assets/js/index.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/app/SelGen/DummyController.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/injected.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/constants.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/gen/oneSelector.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/gen/tagSelectorGen.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/gen/listSelectorGen.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/gen/positionSelectorGen.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/utils.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/gen/parser.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/app/SelGen/ListSelController.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/app/SelGen/FrameController.js" />
+        <item url="file://$PROJECT_DIR$/assets/js/app/SelGen/ItemSelController.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/assets/js/index.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/app/SelGen/DummyController.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/injected.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/constants.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/gen/oneSelector.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/gen/tagSelectorGen.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/gen/listSelectorGen.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/gen/positionSelectorGen.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/utils.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/gen/parser.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/app/SelGen/ListSelController.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/app/SelGen/FrameController.js" />
+      <root url="file://$PROJECT_DIR$/assets/js/app/SelGen/ItemSelController.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

@@ -2,27 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <style>
-        #ctrlCreateListSelector {
-            /*position: fixed;*/
-            height: auto;
-            width: 800px;
-            /*top: 30px;*/
-            /*left: 30px;*/
-            /*display: block;*/
+    <title>Visual Crawler Generator</title>
 
-            /*z-index: 2147483647!important;*/
-
-            /*opacity: 1 !important;*/
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="../node_modules/toastr/build/toastr.css" />
 
     <script>$ = jQuery = require('jquery')</script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="../node_modules/angular/angular.js"></script>
-
     <script src="js/index.js"></script>
 </head>
 <body data-ng-app="SelGenApp">
@@ -32,10 +20,27 @@
     <!-- List selector generator table -->
     <div id="ctrlCreateListSelector" data-ng-controller="ListSelController">
         <h3>List Selector Creator</h3>
-        <table>
+        <table class="table table-striped">
             <tr>
                 <th>Attribute Name</th>
                 <th>Selector</th>
+                <th>Type</th>
+                <th>BG Color</th>
+                <th>Operation</th>
+            </tr>
+            <tr data-ng-repeat="selAttr in selAttributes">
+                <td><input class="form-control" type="text" value="{{ selAttr.name }}" /></td>
+                <td><textarea class="form-control">{{ selAttr.cssText }}</textarea></td>
+                <td><select class="form-control">
+                    <option
+                            data-ng-repeat="selType in selTypes"
+                            name="{{selType.name}}"
+                            data-ng-selected="selType.name == selAttr.type">
+                        {{ selType.displayName }}
+                    </option>
+                </select></td>
+                <td><input type="color" /></td>
+                <td><button class="btn btn-warn" ng-click="clickDelete($index)">Delete</button></td>
             </tr>
         </table>
     </div>
@@ -47,20 +52,31 @@
             <tr>
                 <th>Attribute Name</th>
                 <th>Selector</th>
-                <th>Selected Element</th>
+                <th>First Selected Element</th>
+                <th>Text</th>
                 <th>Type</th>
+                <th>BG Color</th>
                 <th>Operation</th>
             </tr>
 
-            <tr data-ng-repeat="selAttr in selAttributes">
-                <td><input type="text" value="{{ selAttr.name }}" /></td>
-                <td><textarea>{{ selAttr.cssText }}</textarea></td>
-                <td><textarea>{{ selAttr.selectedHTML }}</textarea></td>
+            <tr data-ng-repeat="(selIndex, selAttr) in selAttributes"
+                data-ng-controller="ItemSelItemController">
+
+                <td><input class="form-control" type="text" value="{{ selAttr.name }}" /></td>
+                <td><textarea class="form-control">{{ selAttr.cssText }}</textarea></td>
+                <td><textarea class="form-control">{{ selAttr.selectedHTML }}</textarea></td>
+                <td><textarea class="form-control">{{ selAttr.selectedText }}</textarea></td>
                 <td><select class="form-control">
-                    <option name="text">Text</option>
-                    <option name="link">Link</option>
+                    <option
+                            data-ng-repeat="selType in selTypes"
+                            name="{{selType.name}}"
+                            data-ng-selected="selType.name == selAttr.type">
+                        {{ selType.displayName }}
+                    </option>
                 </select></td>
-                <td><button class="btn btn-warn">Delete</button></td>
+                <td><input type="color" ng-model="selAttr.backgroundColor"/></td>
+                <td>{{ selAttr.backgroundColor }}</td>
+                <td><button class="btn btn-warn" ng-click="onDelete(selIndex)">Delete</button></td>
             </tr>
         </table>
     </div>
@@ -72,14 +88,19 @@
         <input id="inputUrl" class="form-control" value="{{ url }}"/>
     </form>
 
-    <div>
-        <iframe data-ng-src="{{ woUrl }}"
-                width="900"
-                height="700"
-                id="frame"
-                on-frame-load="onFrameLoad()">
-        </iframe>
-    </div>
+    <div><iframe data-ng-src="{{ woUrl }}"
+                 width="900"
+                 height="700"
+                 id="frame"
+                 on-frame-load="onFrameLoad()">
+    </iframe> </div>
+</div>
+
+<!--
+    This is a dummy controller.
+    It does nothing but expose $rootScope to window
+ -->
+<div data-ng-controller="DummyController">
 </div>
 </body>
 </html>

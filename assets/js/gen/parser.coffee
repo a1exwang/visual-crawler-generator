@@ -66,6 +66,7 @@ ParserSelector = (document) ->
     if $(domElement).attr('id')
       cssText = domElement.tagName.toLowerCase() + "##{$(domElement).attr('id')}"
       score = 100
+      selectors.push(createCSSSelector(cssText, score))
     else
       if $(domElement).attr('name')
         name = $(domElement).attr('name')
@@ -83,8 +84,6 @@ ParserSelector = (document) ->
       if selectors.length == 0
         selectors.push(createCSSSelectorByTagName(domElement, 20))
 
-    if cssText
-      selectors.push(createCSSSelector(cssText, score))
     return selectors
 
   this.selectListElementsWithTwoDomElements = (firstDomElement, secondDomElement) ->

@@ -9,7 +9,7 @@ injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
 
   $.each $('*', ), (i, docElement) ->
     jqElement = $(docElement)
-
+    
     parseFirstElement = (event) ->
       selectorGen = new ParserSelector(docElement.ownerDocument)
       listSelector = selectorGen.createListSelectors(docElement)
