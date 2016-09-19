@@ -74,11 +74,11 @@ ParserSelector = (document) ->
         score = 50
         selectors.push(createCSSSelector(cssText, score))
 
-      if $(domElement).attr('class')
-        classNames = $(domElement).attr('class').trim().split(/\s+/)
-        cssText = domElement.tagName.toLowerCase() + $.map(classNames, (ele) -> "." + ele).join('')
-        score = 30
-        selectors.push(createCSSSelector(cssText, score))
+#      if $(domElement).attr('class')
+#        classNames = $(domElement).attr('class').trim().split(/\s+/)
+#        cssText = domElement.tagName.toLowerCase() + $.map(classNames, (ele) -> "." + ele).join('')
+#        score = 30
+#        selectors.push(createCSSSelector(cssText, score))
 
       # if we cannot select anything, use tagName selector
       if selectors.length == 0

@@ -30,7 +30,7 @@ module.exports = (SelGenApp) ->
     # http://search.jd.com/Search?keyword=ddr4&enc=utf-8&wq=ddr4&pvid=2yc7vvsi.6924lg
     # http://www.dmm.com/en/digital/anime/-/list/=/sort=date/
     # http://www.dmm.com/en/digital/anime/-/detail/=/cid=5365hatsukoim00011/?i3_ref=list&i3_ord=1
-    $scope.woUrl = 'http://www.dmm.com/en/digital/anime/-/list/=/sort=date/'
+    $scope.woUrl = 'http://www.dmm.com/en/digital/anime/-/detail/=/cid=5365hatsukoim00011/?i3_ref=list&i3_ord=1'
     $scope.onFrameLoad = ->
       innerWindow = $window.document.getElementById('frame').contentWindow
       $rootScope.$broadcast('urlChanged', $scope.url)

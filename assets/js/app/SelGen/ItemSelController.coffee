@@ -29,12 +29,14 @@ module.exports = (SelGenApp) ->
       { name: 'image', displayName: 'Image' }
     ]
     data = $scope['selAttr']
+    data.elementBackup = {}
+    data.elementBackup.css = { 'background-color': $(data.elements).css('background-color') }
+
     $scope.$watch('selAttr.backgroundColor', (color) ->
       $(data.elements).css('background-color', color)
-#      $(data.elements).css('border-style', 'solid').css('border-color', 'red')
     )
     $scope.onDelete = (index) ->
-      $(data.elements).css('background-color', 'white')
+      $(data.elements).css('background-color', data.elementBackup.css['background-color'])
       $rootScope.$broadcast('ItemSelController::onDelete', index)
   ]
 
