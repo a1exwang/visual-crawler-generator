@@ -13,9 +13,9 @@
     <script src="../node_modules/angular/angular.js"></script>
     <script src="js/index.js"></script>
 </head>
-<body data-ng-app="SelGenApp">
+<body data-ng-app="SelGenApp" class="container">
 
-<div  class="container">
+<div>
 
     <!-- List selector generator table -->
     <div id="ctrlCreateListSelector" data-ng-controller="ListSelController">
@@ -39,10 +39,10 @@
                         {{ selType.displayName }}
                     </option>
                 </select></td>
-                <td><input type="color" /></td>
                 <td><button class="btn btn-warn" ng-click="clickDelete($index)">Delete</button></td>
             </tr>
         </table>
+        <button class="btn btn-success" ng-click="clickCreate">Create</button>
     </div>
 
     <!-- Item attribute selector generator table -->
@@ -79,8 +79,11 @@
                 <td><button class="btn btn-warn" ng-click="onDelete(selIndex)">Delete</button></td>
             </tr>
         </table>
+        <button class="btn btn-success btn-xs" ng-click="clickCreate()">Create</button>
     </div>
 </div>
+
+<hr />
 
 <!-- Inner window -->
 <div data-ng-controller="FrameController">
@@ -88,9 +91,7 @@
         <input id="inputUrl" class="form-control" value="{{ url }}"/>
     </form>
 
-    <div><iframe data-ng-src="{{ woUrl }}"
-                 width="900"
-                 height="700"
+    <div class="responsive-iframe"><iframe data-ng-src="{{ woUrl }}"
                  id="frame"
                  on-frame-load="onFrameLoad()">
     </iframe> </div>

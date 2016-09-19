@@ -22,6 +22,27 @@ module.exports = (SelGenApp) ->
           backgroundColor: C.Colors[Utils.randInt(0, C.Colors.length)]
         )
     )
+    $scope.clickCreate = ->
+      console.log 'clickCreate'
+      attributes = []
+      for attribute in $scope.selAttributes
+        attributes.push(
+          name: attribute.name,
+          type: attribute.type,
+          css: attribute.cssText
+        )
+
+      crawler = {
+        name: "crawler",
+        headers: {
+        "Accept-Language": "en-US",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) visual-spider/0.1.0 Chrome/52.0.2743.82 Electron/1.3.5 Safari/537.36"
+        }
+        attributes: attributes
+      }
+
+      json = { crawlers: [crawler] }
+      console.log json
   ]
   SelGenApp.controller 'ItemSelItemController', ['$scope', '$rootScope', ($scope, $rootScope) ->
     $scope.selTypes = [

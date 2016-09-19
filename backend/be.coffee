@@ -1,21 +1,44 @@
 $ = require 'jquery'
+fs = require 'fs'
 jsdom = require 'jsdom'
 request = require 'request'
+util = require 'util'
 
-options = {
-  url: 'http://www.dmm.com/digital/anime/-/detail/=/cid=5365hatsukoim00011/?i3_ref=list&i3_ord=1dmm.com/en/digital/anime/-/detail/=/cid=5365hatsukoim00011/?i3_ref=list&i3_ord=1',
-  "headers": {
-    "Accept-Language": "en-US",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) visual-spider/0.1.0 Chrome/52.0.2743.82 Electron/1.3.5 Safari/537.36"
-  }
-}
+json = JSON.parse(fs.readFileSync(__dirname + "/crawlers.json"))
+crawlers = json['crawlers']
 
-request options, (err, response, body) ->
-  if (!err && response.statusCode == 200)
-    jsdom.env response.body, [], (err, window) ->
-      jsdom.jQueryify window, "http://code.jquery.com/jquery.js", ->
-        $ = window.$;
-        $(window.document).ready ->
-          result = window.document.querySelector(
-            'html > body[name="dmm_main"] > table#w > tbody > tr > td#mu > div.page-detail > table.mg-b12 > tbody > tr > td > div.mg-b20.lh4 > dl.mg-t12.mg-b0.lh3 > dd.float-l.mg-l6 > a')
-          console.log result.outerHTML
+for crawler in crawlers
+  for url in crawler.urls
+    options = { uri: url, headers: crawlers.headers }
+    request options, (err, response, body) ->
+      if (err || response.statusCode != 200)
+        console.log(err)
+        console.log("HTTP status code = #{response.statusCode}")
+        throw "request failed"
+      else
+        jsdom.env response.body, [], (err, window) ->
+          jsdom.jQueryify window, "http://code.jquery.com/jquery.js", ->
+            $ = window.$
+            $(window.document).ready ->
+              crawlingResults = []
+              for attribute in crawler.attributes
+                elements = window.document.querySelectorAll(attribute.css)
+                if elements.length == 0
+                  throw "invalid selector `#{attribute.css}`, selected nothing!"
+                switch attribute.type
+                  when 'text'
+                    value = $(elements).text()
+                  when 'link'
+                    element = elements[0]
+                    value = $(element).attr('href')
+                  else
+                    throw "Unknown type"
+                crawlingResults.push(
+                  name: attribute.name,
+                  type: attribute.type,
+                  css: attribute.css,
+                  value: value
+                )
+              console.log crawlingResults
+
+

@@ -16,15 +16,6 @@ module.exports = (SelGenApp) ->
           selectorText: selectorText)
       addSingleAttributeToElementSelector: (selectorText) ->
         $rootScope.$broadcast(C.Broadcasts.ItemSel.AddSingleAttr, selectorText)
-#        element = window.innerDocument.querySelectorAll(selectorText)
-#        selectedHTML = element[0].outerHTML
-#        selectedText = $(element).text()
-#        $rootScope.$broadcast(C.Broadcasts.ItemSel.AddSingleAttr,
-#          attributeName: '',
-#          selectorText: selectorText,
-#          selectedHTML: selectedHTML,
-#          selectedText: selectedText
-#        )
     }
 
     # NOTE initialize with jQuery only in here.
@@ -32,6 +23,9 @@ module.exports = (SelGenApp) ->
       $("#inputUrlForm").on 'submit', (e) ->
         $rootScope.$broadcast(C.Broadcasts.Frame.LoadUrl, $("#inputUrl").val())
         e.preventDefault()
+#      webView = document.getElementById("frame")
+#      webView.addEventListener "did-get-response-details", (details) ->
+#        console.log(details)
   ]
 
 

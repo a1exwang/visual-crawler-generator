@@ -6,7 +6,8 @@ createWindow = ->
     width: 1440,
     height: 900,
     'web-preferences': {
-      'web-security': false
+      'web-security': false,
+      'experimental-features' : true
     }
   )
   win.loadURL("file://#{__dirname}/../assets/index.html")
