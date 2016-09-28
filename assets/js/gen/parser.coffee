@@ -58,7 +58,7 @@ getNodeByIndexes = (node, indexes) ->
 ParserSelector = (document) ->
   thisOfParserSelector = this
   this.document = document
-  this.getItemSelectors = (domElement) ->
+  this.parseOneElement = (domElement) ->
     selectors = []
     cssText = null
 
@@ -129,18 +129,22 @@ ParserSelector = (document) ->
       selector: cssCommonAncestorSelector + " > " + cssListItemSelector
     }
 
-  this.createListSelectors = (firstDomElement) ->
-    listSelector = (nextDomElement) ->
-      listSelector.domElements.push(nextDomElement)
-      if listSelector.domElements.length == 2
-        {elements, selector} = thisOfParserSelector.selectListElementsWithTwoDomElements(firstDomElement, nextDomElement)
-        return {elements: elements, selector: selector}
-      else
-        # verify parent node
-        console.log("should verify parent")
-
-    listSelector.domElements = [firstDomElement]
-    return listSelector
+  this.createListSelectorGen = (firstDomElement) ->
+    listSelGen = {
+      elements: [firstDomElement],
+      parseNextElement: (nextDomElement) ->
+        listSelGen.elements.push(nextDomElement)
+      getCSS: () ->
+        if listSelGen.elements.length == 2
+          {selector} = thisOfParserSelector.selectListElementsWithTwoDomElements(
+            listSelGen.elements[0],
+            listSelGen.elements[1]
+          )
+          return selector
+        else
+          console.log("Not 2 elements")
+    }
+    return listSelGen
 
   return this
 module.exports = ParserSelector

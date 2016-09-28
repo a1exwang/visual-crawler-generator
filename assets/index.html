@@ -63,7 +63,7 @@
                 data-ng-controller="ItemSelItemController">
 
                 <td><input class="form-control" type="text" value="{{ selAttr.name }}" /></td>
-                <td><textarea class="form-control">{{ selAttr.cssText }}</textarea></td>
+                <td><textarea class="form-control" data-ng-model="selAttr.cssText"></textarea></td>
                 <td><textarea class="form-control">{{ selAttr.selectedHTML }}</textarea></td>
                 <td><textarea class="form-control">{{ selAttr.selectedText }}</textarea></td>
                 <td><select class="form-control">

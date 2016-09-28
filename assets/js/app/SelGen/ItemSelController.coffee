@@ -35,8 +35,8 @@ module.exports = (SelGenApp) ->
       crawler = {
         name: "crawler",
         headers: {
-        "Accept-Language": "en-US",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) visual-spider/0.1.0 Chrome/52.0.2743.82 Electron/1.3.5 Safari/537.36"
+          "Accept-Language": "en-US",
+          "User-Agent": C.UserAgent
         }
         attributes: attributes
       }
@@ -44,6 +44,7 @@ module.exports = (SelGenApp) ->
       json = { crawlers: [crawler] }
       console.log json
   ]
+
   SelGenApp.controller 'ItemSelItemController', ['$scope', '$rootScope', ($scope, $rootScope) ->
     $scope.selTypes = [
       { name: 'text', displayName: 'Text' },
@@ -53,6 +54,14 @@ module.exports = (SelGenApp) ->
     data.elementBackup = {}
     data.elementBackup.css = { 'background-color': $(data.elements).css('background-color') }
 
+    $scope.$watch('selAttr.cssText', (cssText) ->
+      $(data.elements).css('background-color', data.elementBackup.css['background-color'])
+      try
+        data.elements = innerDocument.querySelectorAll(cssText)
+        $(data.elements).css('background-color', $scope['selAttr'].backgroundColor)
+      catch e
+        # eat the exception because the user can input an invalid css selector
+    )
     $scope.$watch('selAttr.backgroundColor', (color) ->
       $(data.elements).css('background-color', color)
     )

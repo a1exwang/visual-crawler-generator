@@ -1,31 +1,57 @@
 ParserSelector = require './gen/parser'
 
-listSelector = null
+##
+# This file is injected in the client page.
+#
+# This file handles all intercepted DOM event and translate them into parser commands
+#  and send to parser.js
+
+## Interfaces
+# selGen = new ParserSelector(document)
+# selectors = selGen.parseOneElement(element)
+# selectors is an array of Selector
+#
+# Selector:
+#   functions:
+#     toCSS()
+#     toReadableString()
+#
+# selGen1 = selGen.createListSelectorGen(element)
+# selGen2 = selGen1.parseNextElement(element)
+# ...
+# {cssText} = selGenN.getSelector()
+#
+# SelectorCreation event
+# outerWindow.api.addSingleAttributeToElementSelector(cssText)
+# outerWindow.api.addSingleAttributeToListSelector(cssText)
+
+listSelGen = null
 
 injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
   outerWindow.w = outerWindow.innerWindow = window
   outerWindow.d = outerWindow.innerDocument = window.document
   document = window.document
 
-  $.each $('*', ), (i, docElement) ->
+  $.each $('*'), (i, docElement) ->
     jqElement = $(docElement)
     
     parseFirstElement = (event) ->
       selectorGen = new ParserSelector(docElement.ownerDocument)
-      listSelector = selectorGen.createListSelectors(docElement)
+      listSelGen = selectorGen.createListSelectorGen(docElement)
 
     parseNextElement = (event) ->
-      {elements, selector} = listSelector(docElement)
+      listSelGen.parseNextElement(docElement)
+      cssText = listSelGen.getCSS()
+      elements = document.querySelectorAll(cssText)
       for selectedTarget in elements
-        $(selectedTarget).stop().css("background-color", "#FFFF9C").animate({ backgroundColor: "#FFFFFF"}, 1500);
+        $(selectedTarget).stop().css("background-color", "#FFFF9C")
 
-      outerWindow.api.addSingleAttributeToListSelector(selector)
+      outerWindow.api.addSingleAttributeToListSelector(cssText)
 
     parseOneElement = (event, level) ->
       return unless level == 0
       selectorGen = new ParserSelector(docElement.ownerDocument)
-      selectors = selectorGen.getItemSelectors(docElement)
-#      console.log("--- Level #{level} ---")
+      selectors = selectorGen.parseOneElement(docElement)
       $.each(selectors, (i, selector) ->
         console.log "Selector##{i}: #{selector.toReadableString()}"
 
@@ -67,14 +93,15 @@ injectedJsWithJQuery = (window, $, outerWindow, outerDocument) ->
     jqElement.data('__prev_onclick', jqElement.attr('onclick'))
     jqElement.data('__my_onclick', parseOneElement)
     jqElement.on('mousedown', (e) ->
+      # Right mouse key clicked
       if e.which == 3
         if e.ctrlKey
-          if listSelector
+          if listSelGen
             parseNextElement(e)
           else
             parseFirstElement(e)
         else if e.shiftKey
-          listSelector = null
+          listSelGen = null
         else
           parseOneElement(e, 0)
         e.stopPropagation()

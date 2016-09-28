@@ -19,5 +19,6 @@ module.exports = {
     "#E44424", "#67BCDB", "#A2AB58", "#FFFFFF",
     "#404040", "#6DBDD6", "#B71427", "#FFE658",
     "#585858", "#118C4E", "#C1E1A6", "#FF9009",
-    "#191919", "#DF3D82", "#FFFFFF"]
+    "#191919", "#DF3D82", "#FFFFFF"],
+  UserAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) visual-spider/0.1.0 Chrome/52.0.2743.82 Electron/1.3.5 Safari/537.36"
 }
