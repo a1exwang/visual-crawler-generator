@@ -1,8 +1,6 @@
-$ = require 'jquery'
-
 ##
 # AngularJS App initialization
-loadAngularCtrl = (filePath, app) ->
+loadAngularFile = (filePath, app) ->
   require(filePath)(app)
 
 SelGenApp = angular.module('SelGenApp', [])
@@ -23,9 +21,12 @@ SelGenApp.directive 'onFrameLoad', ->
         scope.onFrameLoad()
   }
 
-loadAngularCtrl('./js/app/SelGen/DummyController', SelGenApp)
-loadAngularCtrl('./js/app/SelGen/AddressBarController', SelGenApp)
-loadAngularCtrl('./js/app/SelGen/ListSelController', SelGenApp)
-loadAngularCtrl('./js/app/SelGen/ItemSelController', SelGenApp)
-loadAngularCtrl('./js/app/SelGen/FrameController', SelGenApp)
+loadAngularFile('./js/app/sel-gen/export-service', SelGenApp)
+loadAngularFile('./js/app/sel-gen/address-bar-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/base-control-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/custom-sel-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/dummy-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/frame-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/item-sel-controller', SelGenApp)
+loadAngularFile('./js/app/sel-gen/list-sel-controller', SelGenApp)
 

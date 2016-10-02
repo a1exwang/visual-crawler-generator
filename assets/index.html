@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../node_modules/toastr/build/toastr.css" />
 
     <script>$ = jQuery = require('jquery')</script>
+    <script src="../node_modules/jquery-color/jquery.color.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="../node_modules/angular/angular.js"></script>
     <script src="js/index.js"></script>
@@ -16,6 +17,10 @@
 <body data-ng-app="SelGenApp" class="container">
 
 <div>
+    <div id="ctrlBaseControl" data-ng-controller="BaseControlController">
+        <button class="btn btn-xs" ng-click="clickImport()">Import</button>
+        <button class="btn btn-xs" ng-click="clickExport()">Export</button>
+    </div>
 
     <!-- List selector generator table -->
     <div id="ctrlCreateListSelector" data-ng-controller="ListSelController">
@@ -29,7 +34,7 @@
                 <th>Operation</th>
             </tr>
             <tr data-ng-repeat="selAttr in selAttributes">
-                <td><input class="form-control" type="text" value="{{ selAttr.name }}" /></td>
+                <td><input class="form-control" type="text" ng-model="selAttr.name" /></td>
                 <td><textarea class="form-control">{{ selAttr.cssText }}</textarea></td>
                 <td><select class="form-control">
                     <option
@@ -42,7 +47,6 @@
                 <td><button class="btn btn-warn" ng-click="clickDelete($index)">Delete</button></td>
             </tr>
         </table>
-        <button class="btn btn-success" ng-click="clickCreate">Create</button>
     </div>
 
     <!-- Item attribute selector generator table -->
@@ -62,10 +66,10 @@
             <tr data-ng-repeat="(selIndex, selAttr) in selAttributes"
                 data-ng-controller="ItemSelItemController">
 
-                <td><input class="form-control" type="text" value="{{ selAttr.name }}" /></td>
+                <td><input class="form-control" type="text" ng-model="selAttr.name" /></td>
                 <td><textarea class="form-control" data-ng-model="selAttr.cssText"></textarea></td>
-                <td><textarea class="form-control">{{ selAttr.selectedHTML }}</textarea></td>
-                <td><textarea class="form-control">{{ selAttr.selectedText }}</textarea></td>
+                <td><pre>{{ selAttr.selectedHTML }}</pre></td>
+                <td><pre>{{ selAttr.selectedText }}</pre></td>
                 <td><select class="form-control">
                     <option
                             data-ng-repeat="selType in selTypes"
@@ -75,13 +79,37 @@
                     </option>
                 </select></td>
                 <td><input type="color" ng-model="selAttr.backgroundColor"/></td>
-                <td>{{ selAttr.backgroundColor }}</td>
                 <td><button class="btn btn-warn" ng-click="onDelete(selIndex)">Delete</button></td>
             </tr>
         </table>
-        <button class="btn btn-success btn-xs" ng-click="clickCreate()">Create</button>
     </div>
+
+    <hr />
+
+    <!-- Custom Selector is created with plain-old-javascript file -->
+    <div id="ctrlCreateCustomSelector" data-ng-controller="CustomSelController">
+        <h3>Custom Selector Creator</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>Type</th>
+                <th>Attribute Name</th>
+                <th>Attribute Value</th>
+                <th>BG Color</th>
+            </tr>
+
+            <tr data-ng-repeat="(selIndex, selAttr) in selAttributes"
+                data-ng-controller="CustomSelItemController">
+                <td>{{ selAttr.type }}</td>
+                <td>{{ selAttr.name }}</td>
+                <td><code>{{ selAttr.value }}</code></td>
+                <td><input type="color" ng-model="selAttr.backgroundColor"/></td>
+            </tr>
+        </table>
+        <button class="btn btn-warning btn-xs" ng-click="clickImportCustomSelector()">Import JS</button>
+    </div>
+
 </div>
+
 
 <hr />
 

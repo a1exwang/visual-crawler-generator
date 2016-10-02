@@ -1,7 +1,14 @@
 Utils = require '../../utils'
 C = require('../../constants')
 module.exports = (SelGenApp) ->
-  SelGenApp.controller 'ItemSelController', ['$scope', '$rootScope', ($scope, $rootScope) ->
+  SelGenApp.controller 'ItemSelController', ['$scope', '$rootScope', 'exportToJson', ($scope, $rootScope, exportToJson) ->
+    exportToJson.registerItemSel(()->
+      ret = []
+      for selAttr in $scope.selAttributes
+        ret.push(name: selAttr.name, type: selAttr.type, cssText: selAttr.cssText)
+      return ret
+    )
+
     $scope.selAttributes = []
 
     $rootScope.$on 'ItemSelController::onDelete', (event, index) ->
@@ -22,27 +29,6 @@ module.exports = (SelGenApp) ->
           backgroundColor: C.Colors[Utils.randInt(0, C.Colors.length)]
         )
     )
-    $scope.clickCreate = ->
-      console.log 'clickCreate'
-      attributes = []
-      for attribute in $scope.selAttributes
-        attributes.push(
-          name: attribute.name,
-          type: attribute.type,
-          css: attribute.cssText
-        )
-
-      crawler = {
-        name: "crawler",
-        headers: {
-          "Accept-Language": "en-US",
-          "User-Agent": C.UserAgent
-        }
-        attributes: attributes
-      }
-
-      json = { crawlers: [crawler] }
-      console.log json
   ]
 
   SelGenApp.controller 'ItemSelItemController', ['$scope', '$rootScope', ($scope, $rootScope) ->

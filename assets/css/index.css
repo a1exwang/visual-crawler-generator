@@ -12,7 +12,7 @@
 }
 textarea {
     border:1px solid #999999;
-    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+    font-family: Monospaced, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 }
 .responsive-iframe {
     position: relative;
