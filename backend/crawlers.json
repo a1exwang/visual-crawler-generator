@@ -10,7 +10,9 @@
       "attributes": [
         { "name": "title", "type": "text", "css": "h1#title" },
         { "name": "link1", "type": "link", "css": "html > body[name=\"dmm_main\"] > table#w > tbody > tr > td#mu > div.page-detail > table.mg-b12 > tbody > tr > td > div.mg-b20.lh4 > dl.mg-t12.mg-b0.lh3 > dd.float-l.mg-l6 > a"}
-      ]
+      ],
+      "customScripts":
+      [{"type": "file", "path": "attrs/dmm-attrs.js"}]
     }
   ]
 }

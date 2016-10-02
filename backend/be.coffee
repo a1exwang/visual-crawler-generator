@@ -37,8 +37,19 @@ for crawler in crawlers
                   name: attribute.name,
                   type: attribute.type,
                   css: attribute.css,
-                  value: value
+                  value: value,
+                  associatedElements: elements
                 )
-              console.log crawlingResults
+              cs = crawler['customScripts']
+              for script in cs
+                if script.type == "file"
+                  fn = require(__dirname + '/' + script.path)
+                  fn(window, window.document, $, crawlingResults, {}, (el) ->
+                    crawlingResults.push(el)
+                  )
+                else
+                  throw "invalid script type"
+
+              console.log JSON.stringify(crawlingResults, null, 4)
 
 
